@@ -50,7 +50,24 @@ def player_choose_symbol():
         return ('o', 'x')
 
 def place_marker(board, index, player):
-    """Small function used to insert new markers into the list which represents the game board"""
+    """
+    Small function used to insert new markers into the list which represents the game board
+    
+    Parameters
+    ----------
+    board : List
+    index : int
+    player : char
+
+    Outputs
+    ----------
+    None
+
+    Return values
+    ----------
+    None 
+
+    """
     board[index] = player # Assign the list indes indicated to equal the symbol of the player which has been passed as an argument
     draw_board(board) # Call the function to redraw the board with the newly placed symbol
 
@@ -133,13 +150,50 @@ def full_board_check(board):
         return True # Returns True if the for loop is not exited at any point
 
 def player_choice(board, player):
-    input_pos = int(input(f"Player {player}: Please select the index where you would like to place your symbol (1-9): "))
+    """
+    Function which stores user input of position where they want to place one of their markers.
+    Uses the space_check() function to check whether the user's selected index is empty or not.
+    Calls the place_marker() function to place the marker into the board, once the user's selected index has been checked
+    
+    Parameters
+    ----------
+    board : List
+    player : char
 
-    while not space_check(board, input_pos-1):
+    Outputs
+    ----------
+    Print statements requesting user input of their chosen index for placing a marker
+
+    Return values
+    ----------
+    None
+    
+    """
+    input_pos = int(input(f"Player {player}: Please select the index where you would like to place your symbol (1-9): ")) # Input statement that stores user input in input_pos variable
+
+    while not space_check(board, input_pos-1): # While the users input does not correlate to a free space on the board, request that they choose andother
         input_pos = int(input("You cannot place your symbol there, as that position is already occupied. Please try again\n\nPlease select the index where you would like to place your symbol (1-9): "))
-    place_marker(board, input_pos-1, player)
+    place_marker(board, input_pos-1, player) # Once an approved index has been selected, call place_marker() to place it into the board
 
 def replay():
+    """
+    Function which is called at the end of a game to ask the user if they would like to play again.
+    If yes, the function calls os.system('cls') to clear the screen, and run_game() to restart the game
+    If no, the function calls exit() to exit the program in the console
+    
+    Parameters
+    ----------
+    None
+
+    Outputs
+    ----------
+    Print statements requesting user choose weather to continue or not
+
+    Return values
+    ----------
+    None
+    
+    """
     choice = input("Would you like to replay? Yes or No: ")
     if choice.lower() == 'yes':
         os.system('cls')
@@ -148,23 +202,39 @@ def replay():
         exit()
 
 def run_game():
-    board = [' '] * 9
+    """
+    Main function which handles game progression and calls other functions for specific game actions
     
-    players = player_choose_symbol()
-    draw_board(board)
-    counter = -1
-    while not win_check(board) and not full_board_check(board):
-        counter += 1
-        player_choice(board, players[counter % 2])
-        
+    Parameters
+    ----------
+    None
+
+    Outputs
+    ----------
+    Victory statement when a victory condition is met
+    Message to indicate a full board when the board is full but no victory condition has been met
+
+    Return values
+    ----------
+    None
+    
+    """
+
+    board = [' '] * 9 # Defines a List of size 9 where all elements start as ' ', to be used to store x's and o's
+    players = player_choose_symbol() # Asigns the output of player_choose_symbol() to be stored in a tuple variable
+    draw_board(board) # Draws intial empty board
+    counter = -1 # Counter which will be used to toggle between x and o in players
+    while not win_check(board) and not full_board_check(board): # While the board is not full and no victory condition has been met
+        counter += 1 # Counter incremented before player choice so that it starts at 0 and so that the victory statements after the while loop has exited display the same symbol as 
+                     # the one used by the player who's turn it was when the while loops exits
+        player_choice(board, players[counter % 2]) # Call to player_choice() allows the current user to take their turn placing their marker on the board
+    # When the while loop exits, check if a victory condition is met. If so, output a victory message for the player who played the winning move.
+    # If no victory condition is met then the board must be empty
     if win_check(board):
-        print(f"Victory! The {players[counter % 2]}'s win!!!!'")
-        replay()
+        print(f"Victory! The {players[counter % 2]}'s win!!!!'") # Victory message
+        replay() # Call replay() to ask players if they wish to play another game
     elif full_board_check(board):
-        print("The board is full and there are no winners")
-        replay()
+        print("The board is full and there are no winners") # Board full message
+        replay() # Call replay() to ask players if they wish to play another game
 
-run_game()
-
-    
-
+run_game() # Call to run_game() to run the program
