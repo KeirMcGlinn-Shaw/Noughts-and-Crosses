@@ -1,3 +1,9 @@
+"""
+Noughts and Corsses
+
+An implementaion of the game noughts and crosses with two human players
+Author: Keir McGlinn-Shaw
+"""
 import os
 
 def draw_board(board):
